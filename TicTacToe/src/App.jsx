@@ -1,8 +1,7 @@
 import "./styles/App.css";
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import Tile from "./components/Tile.jsx";
-import WinningAnimation from "./components/WinningAnimations";
+import WinningAnimation from "./components/WinningAnimations.jsx";
 import winnerCat from "./assets/dancing-cat-gif.gif";
 import History from "./components/History.jsx";
 
@@ -218,20 +217,24 @@ function App() {
   //History Functionality*******************************************
 
   return (
-    <div className="body">
-      <img src={winnerCat}></img>
-      <div className="main--section">
-        <h1>{title()}</h1>
-        <div className="">
-          <TileElements />
+    <div>
+      <div className="body">
+      <WinningAnimation gif={hasWinner ? winnerCat : null }/>
+        <div className="main--section">
+          <h1>{title()}</h1>
+          <div className="">
+            <TileElements />
+          </div>
+          <br />
+          <button className="reset-btn" onClick={newBoard}>
+            Reset Game
+          </button>
         </div>
-        <br />
-        <button className="reset-btn" onClick={newBoard}>
-          Reset Game
-        </button>
+        <History history={history} handleHistory={handleHistory} />
+        <WinningAnimation gif={hasWinner ? winnerCat : null}/>
+
       </div>
-      <History history={history} handleHistory={handleHistory} />
-      </div>
+      
     </div>
   );
 }
