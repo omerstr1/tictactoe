@@ -7,10 +7,7 @@ import History from "./components/History.jsx";
 import Confetti from './components/Confetti';
 
 
-//TODO:
-//3. externelize components and functions X
-//4. clean up app
-//
+
 const generateBoard = () => {
   return [
     [
