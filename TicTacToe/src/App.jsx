@@ -4,6 +4,8 @@ import Tile from "./components/Tile.jsx";
 import WinningAnimation from "./components/WinningAnimations.jsx";
 import winnerCat from "./assets/dancing-cat-gif.gif";
 import History from "./components/History.jsx";
+import Confetti from './components/Confetti';
+
 
 //TODO:
 //1. matrix V
@@ -219,6 +221,7 @@ function App() {
   return (
     <div>
       <div className="body">
+      {hasWinner && <Confetti />}
       <WinningAnimation gif={hasWinner ? winnerCat : null }/>
         <div className="main--section">
           <h1>{title()}</h1>
