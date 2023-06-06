@@ -8,11 +8,8 @@ import Confetti from './components/Confetti';
 
 
 //TODO:
-//1. matrix V
-//2. annonymous functions X
 //3. externelize components and functions X
 //4. clean up app
-//find a winning animation
 //
 const generateBoard = () => {
   return [
@@ -116,7 +113,7 @@ function App() {
   // change to foreach
   //matrix-------------------------------------------------------------------------
 
-  function checkWinner(matrix) {
+  const checkWinner = (matrix) => {
     // Check rows
     for (let row = 0; row < 3; row++) {
       if (
@@ -161,7 +158,7 @@ function App() {
 
   //Tile click
   //matrix-------------------------------------------------------------------------
-  function handleClick(id, newValue) {
+  const handleClick =(id, newValue) => {
     const row = Math.floor(id / 3);
     const col = id % 3;
     if (board[row][col].value === " ") {
@@ -176,7 +173,7 @@ function App() {
   }
   //Setting a title
 
-  function title() {
+  const title = () => {
     if (hasWinner) {
       return `${history[history.length - 1].value} Won!`;
     } else if (isBoardFull()) {
@@ -192,13 +189,13 @@ function App() {
 
   //add Move To History
   //matrix-------------------------------------------------------------------------
-  function addToHistory(id, value) {
+  const addToHistory = (id, value) => {
     setHistory((oldHistory) => [...oldHistory, { id, value }]);
   }
 
   //Generate a board from history
   //matrix-------------------------------------------------------------------------
-  function generateBoardFromArray(newHistory) {
+  const generateBoardFromArray = (newHistory) => {
     let newBoard = generateBoard();
     for (let j = 0; j < newHistory.length; j++) {
       newBoard[Math.floor(newHistory[j].id / 3)][newHistory[j].id % 3].value =
@@ -209,7 +206,7 @@ function App() {
 
   //Handle a click on a history button
 
-  function handleHistory(currHistory, index) {
+  const handleHistory = (currHistory, index) => {
     const newHistory = currHistory.slice(0, index + 1);
     const newBoard = generateBoardFromArray(newHistory);
     setBoard(newBoard);
