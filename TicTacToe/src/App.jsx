@@ -75,7 +75,7 @@ export default function App() {
     setHasWinner(checkWinner(board));
   }, [board]);
 
-  function checkWinner(matrix) {
+  const checkWinner = (matrix) => {
     const numRows = matrix.length;
     const numCols = matrix[0].length;
 
@@ -109,15 +109,15 @@ export default function App() {
     }
 
     return false;
-  }
+  };
 
-  function checkRow(row) {
+  const checkRow = (row) => {
     return row.every(
       (cell) => cell.value !== " " && cell.value === row[0].value
     );
-  }
+  };
 
-  function handleClick(tileId, newValue) {
+  const handleClick = (tileId, newValue) => {
     const row = Math.floor(tileId / 3);
     const col = tileId % 3;
     if (board[row][col].value === " ") {
@@ -127,9 +127,9 @@ export default function App() {
       addToHistory(tileId, newValue);
       setHasWinner(checkWinner(board));
     }
-  }
+  };
 
-  function title() {
+  const title = () => {
     if (hasWinner) {
       return `${history[history.length - 1].value} Won!`;
     } else if (history.length === 9) {
@@ -139,23 +139,23 @@ export default function App() {
     }
   }
 
-  function addToHistory(tileId, value) {
+  const addToHistory = (tileId, value) => {
     setHistory((oldHistory) => [...oldHistory, { tileId, value }]);
   }
 
-  function generateBoardFromArray(newHistory) {
+  const generateBoardFromHistory = (newHistory) => {
     let newBoard = generateBoard(3);
-    for (let j = 0; j < newHistory.length; j++) {
-      newBoard[Math.floor(newHistory[j].tileId / 3)][
-        newHistory[j].tileId % 3
-      ].value = newHistory[j].value;
+    for (let index = 0; index < newHistory.length; index++) {
+      newBoard[Math.floor(newHistory[index].tileId / 3)][
+        newHistory[index].tileId % 3
+      ].value = newHistory[index].value;
     }
     return newBoard;
   }
 
-  function handleHistory(currHistory, index) {
+  const handleHistory = (currHistory, index) => {
     const newHistory = currHistory.slice(0, index + 1);
-    const newBoard = generateBoardFromArray(newHistory);
+    const newBoard = generateBoardFromHistory(newHistory);
     setBoard(newBoard);
     setHistory(newHistory);
   }
@@ -164,7 +164,7 @@ export default function App() {
     <div>
       <div className="body">
         {hasWinner && <Confetti />}
-        <WinningAnimation gif={hasWinner ? winnerCat : null} />
+        {hasWinner && <WinningAnimation gif={winnerCat} />}
         <div className="main--section">
           <h1>{title()}</h1>
           <div className="">
@@ -176,7 +176,7 @@ export default function App() {
           </button>
         </div>
         <History history={history} handleHistory={handleHistory} />
-        <WinningAnimation gif={hasWinner ? winnerCat : null} />
+        {hasWinner && <WinningAnimation gif={winnerCat} />}
       </div>
     </div>
   );

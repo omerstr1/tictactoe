@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-export default function History({ history, handleHistory }) {
+export default History = ({ history, handleHistory }) => {
   const historyElements = history.map((move, index) => (
     <div key={index}>
       <button
