@@ -1,18 +1,19 @@
 import React, { useEffect } from "react";
 import History from "./History";
 
-const HistoryContainer = ( props ) =>{
+const HistoryContainer = (props) => {
   return (
-    <div key={index}>
-      {history.map((move, index) => (
+    <div className="moves-container">
+       <h2 className="history-btn">History</h2>
+      {props.history.map((move, index) => (
         <History
           move={move}
           index={index}
-          onClick={() => handleHistory(props.history, props.index)}
+          key={index}
+          handleClick={() => props.handleHistory(props.history, index)}
         />
       ))}
     </div>
   );
 };
-
 export default HistoryContainer;
