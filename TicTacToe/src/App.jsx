@@ -1,11 +1,11 @@
+import HistoryContainer from "./components/HistoryContainer.jsx";
 import WinningAnimation from "./components/WinningAnimations.jsx";
 import winnerCat from "./assets/dancing-cat-gif.gif";
 import React, { useEffect, useState } from "react";
 import Confetti from "./components/Confetti.jsx";
-import History from "./components/History.jsx";
 import Tile from "./components/Tile.jsx";
 import "./styles/App.css";
-
+//C:\Users\Omer\Desktop\tictactoe\TicTacToe\src\components\HistoryContainer.jsx
 const generateBoard = (size) => {
   const newBoard = [];
   for (let row = 0; row < size; row++) {
@@ -137,11 +137,11 @@ export default function App() {
     } else {
       return `${currPlayer()}'s Turn`;
     }
-  }
+  };
 
   const addToHistory = (tileId, value) => {
     setHistory((oldHistory) => [...oldHistory, { tileId, value }]);
-  }
+  };
 
   const generateBoardFromHistory = (newHistory) => {
     let newBoard = generateBoard(3);
@@ -151,14 +151,14 @@ export default function App() {
       ].value = newHistory[index].value;
     }
     return newBoard;
-  }
+  };
 
   const handleHistory = (currHistory, index) => {
     const newHistory = currHistory.slice(0, index + 1);
     const newBoard = generateBoardFromHistory(newHistory);
     setBoard(newBoard);
     setHistory(newHistory);
-  }
+  };
 
   return (
     <div>
@@ -175,7 +175,7 @@ export default function App() {
             Reset Game
           </button>
         </div>
-        <History history={history} handleHistory={handleHistory} />
+        <HistoryContainer history={history} handleHistory={handleHistory} />
         {hasWinner && <WinningAnimation gif={winnerCat} />}
       </div>
     </div>
