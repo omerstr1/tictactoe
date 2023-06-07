@@ -1,39 +1,27 @@
-import "./styles/App.css";
-import React, { useEffect } from "react";
-import Tile from "./components/Tile.jsx";
 import WinningAnimation from "./components/WinningAnimations.jsx";
 import winnerCat from "./assets/dancing-cat-gif.gif";
+import React, { useEffect, useState } from "react";
+import Confetti from "./components/Confetti.jsx";
 import History from "./components/History.jsx";
-import Confetti from './components/Confetti';
+import Tile from "./components/Tile.jsx";
+import "./styles/App.css";
 
-
-
-const generateBoard = () => {
-  return [
-    [
-      { id: 0, value: " " },
-      { id: 1, value: " " },
-      { id: 2, value: " " },
-    ],
-    [
-      { id: 3, value: " " },
-      { id: 4, value: " " },
-      { id: 5, value: " " },
-    ],
-    [
-      { id: 6, value: " " },
-      { id: 7, value: " " },
-      { id: 8, value: " " },
-    ],
-  ];
+const generateBoard = (size) => {
+  const newBoard = [];
+  for (let row = 0; row < size; row++) {
+    const currRow = [];
+    for (let col = 0; col < size; col++) {
+      currRow.push({ tileId: row * size + col, value: " " });
+    }
+    newBoard.push(currRow);
+  }
+  return newBoard;
 };
 
-function App() {
-  const [board, setBoard] = React.useState(generateBoard);
-  const [hasWinner, setHasWinner] = React.useState(false);
-  const [history, setHistory] = React.useState([]);
-
-  //Elements *******************************************************
+export default function App() {
+  const [board, setBoard] = useState(generateBoard(3));
+  const [hasWinner, setHasWinner] = useState(false);
+  const [history, setHistory] = useState([]);
 
   const TileElements = () => {
     return (
@@ -42,11 +30,13 @@ function App() {
           <div className="grid-col-container" key={rowIndex}>
             {row.map((cell) => (
               <Tile
-                key={cell.id}
+                key={cell.tileId}
                 value={cell.value}
-                id={cell.id}
+                tileId={cell.tileId}
                 handleClick={
-                  hasWinner ? null : () => handleClick(cell.id, currPlayer())
+                  hasWinner
+                    ? null
+                    : () => handleClick(cell.tileId, currPlayer())
                 }
               />
             ))}
@@ -57,27 +47,21 @@ function App() {
   };
 
   const newBoard = () => {
-    setBoard(generateBoard);
+    setBoard(generateBoard(3));
     setHistory([]);
     setHasWinner(false);
   };
 
-  //History
-  //component
   const historyElements = history.map((move, index) => (
     <div key={index}>
       <button
         className="history-btn"
         onClick={() => handleHistory(history, index)}
       >
-        {index}. move is {move.value} in spot {move.id + 1}
+        {index}. move is {move.value} in spot {JSON.stringify(move.tileId)}
       </button>
     </div>
   ));
-
-  //Basic game******************************************************
-
-  //Check who is the current player
 
   const currPlayer = () => {
     if (history.length % 2 === 1) {
@@ -87,136 +71,100 @@ function App() {
     }
   };
 
-  //generate an empty board
-  //matrix-------------------------------------------------------------------------
-
-  //Generate a new game
-  //matrix-------------------------------------------------------------------------
-
-  //Check for winner
-
   useEffect(() => {
-    const hasWinner = checkWinner(board);
-    setHasWinner(hasWinner);
+    setHasWinner(checkWinner(board));
   }, [board]);
 
-  //If game is over by tie
+  function checkWinner(matrix) {
+    const numRows = matrix.length;
+    const numCols = matrix[0].length;
 
-  function isBoardFull() {
-    return history.length === 9;
-  }
-
-  //If game is over by win
-  // change to foreach
-  //matrix-------------------------------------------------------------------------
-
-  const checkWinner = (matrix) => {
-    // Check rows
-    for (let row = 0; row < 3; row++) {
-      if (
-        matrix[row][0].value !== " " &&
-        matrix[row][0].value === matrix[row][1].value &&
-        matrix[row][1].value === matrix[row][2].value
-      ) {
+    for (let row = 0; row < numRows; row++) {
+      if (checkRow(matrix[row])) {
         return true;
       }
     }
 
-    // Check columns
-    for (let col = 0; col < 3; col++) {
-      if (
-        matrix[0][col].value !== " " &&
-        matrix[0][col].value === matrix[1][col].value &&
-        matrix[1][col].value === matrix[2][col].value
-      ) {
+    for (let col = 0; col < numCols; col++) {
+      const column = [];
+      for (let row = 0; row < numRows; row++) {
+        column.push(matrix[row][col]);
+      }
+      if (checkRow(column)) {
         return true;
       }
     }
 
-    // Check diagonals
-    if (
-      matrix[0][0].value !== " " &&
-      matrix[0][0].value === matrix[1][1].value &&
-      matrix[1][1].value === matrix[2][2].value
-    ) {
+    const diagonal1 = [];
+    const diagonal2 = [];
+    for (let index = 0; index < numRows; index++) {
+      diagonal1.push(matrix[index][index]);
+      diagonal2.push(matrix[index][numCols - 1 - index]);
+    }
+    if (checkRow(diagonal1)) {
       return true;
     }
-    if (
-      matrix[0][2].value !== " " &&
-      matrix[0][2].value === matrix[1][1].value &&
-      matrix[1][1].value === matrix[2][0].value
-    ) {
+    if (checkRow(diagonal2)) {
       return true;
     }
 
-    // No winning player
     return false;
   }
 
-  //Tile click
-  //matrix-------------------------------------------------------------------------
-  const handleClick =(id, newValue) => {
-    const row = Math.floor(id / 3);
-    const col = id % 3;
+  function checkRow(row) {
+    return row.every(
+      (cell) => cell.value !== " " && cell.value === row[0].value
+    );
+  }
+
+  function handleClick(tileId, newValue) {
+    const row = Math.floor(tileId / 3);
+    const col = tileId % 3;
     if (board[row][col].value === " ") {
       let newBoard = [...board];
       newBoard[row][col].value = newValue;
       setBoard(newBoard);
-      addToHistory(id, newValue);
-
-      const winnerExists = checkWinner(newBoard);
-      setHasWinner(winnerExists);
+      addToHistory(tileId, newValue);
+      setHasWinner(checkWinner(board));
     }
   }
-  //Setting a title
 
-  const title = () => {
+  function title() {
     if (hasWinner) {
       return `${history[history.length - 1].value} Won!`;
-    } else if (isBoardFull()) {
+    } else if (history.length === 9) {
       return "It's a tie!";
     } else {
       return `${currPlayer()}'s Turn`;
     }
   }
 
-  //Basic game******************************************************
-
-  //History Functionality*******************************************
-
-  //add Move To History
-  //matrix-------------------------------------------------------------------------
-  const addToHistory = (id, value) => {
-    setHistory((oldHistory) => [...oldHistory, { id, value }]);
+  function addToHistory(tileId, value) {
+    setHistory((oldHistory) => [...oldHistory, { tileId, value }]);
   }
 
-  //Generate a board from history
-  //matrix-------------------------------------------------------------------------
-  const generateBoardFromArray = (newHistory) => {
-    let newBoard = generateBoard();
+  function generateBoardFromArray(newHistory) {
+    let newBoard = generateBoard(3);
     for (let j = 0; j < newHistory.length; j++) {
-      newBoard[Math.floor(newHistory[j].id / 3)][newHistory[j].id % 3].value =
-        newHistory[j].value;
+      newBoard[Math.floor(newHistory[j].tileId / 3)][
+        newHistory[j].tileId % 3
+      ].value = newHistory[j].value;
     }
     return newBoard;
   }
 
-  //Handle a click on a history button
-
-  const handleHistory = (currHistory, index) => {
+  function handleHistory(currHistory, index) {
     const newHistory = currHistory.slice(0, index + 1);
     const newBoard = generateBoardFromArray(newHistory);
     setBoard(newBoard);
     setHistory(newHistory);
   }
 
-  //History Functionality*******************************************
-
   return (
     <div>
       <div className="body">
-      {hasWinner && <Confetti />}
-      <WinningAnimation gif={hasWinner ? winnerCat : null }/>
+        {hasWinner && <Confetti />}
+        <WinningAnimation gif={hasWinner ? winnerCat : null} />
         <div className="main--section">
           <h1>{title()}</h1>
           <div className="">
@@ -228,12 +176,8 @@ function App() {
           </button>
         </div>
         <History history={history} handleHistory={handleHistory} />
-        <WinningAnimation gif={hasWinner ? winnerCat : null}/>
-
+        <WinningAnimation gif={hasWinner ? winnerCat : null} />
       </div>
-      
     </div>
   );
 }
-
-export default App;

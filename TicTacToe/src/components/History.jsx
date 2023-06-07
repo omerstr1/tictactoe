@@ -7,7 +7,7 @@ export default function History({ history, handleHistory }) {
         className="history-btn"
         onClick={() => handleHistory(history, index)}
       >
-        {index}. move is {move.value} in spot {move.id + 1}
+        {index}. move is {move.value} in spot {move.tileId + 1}
       </button>
     </div>
   ));
