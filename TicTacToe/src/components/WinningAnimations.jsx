@@ -1,9 +1,11 @@
 import React from 'react';
 
-export default function WinningAnimation(props) {
+const WinningAnimation = (props) => {
 return (
-    <div className="WinningGif">
+    <div>
         <img src={props.gif}/>
     </div>
 )
 }
+
+export default WinningAnimation;
