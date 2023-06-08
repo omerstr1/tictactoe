@@ -1,10 +1,10 @@
 import WinningAnimation from "./components/WinningAnimations.jsx";
 import HistoryContainer from "./components/HistoryContainer.jsx";
+import winnerHam from "./assets/dancing-hamster-gif.gif";
 import winnerCat from "./assets/dancing-cat-gif.gif";
 import React, { useEffect, useState } from "react";
 import Confetti from "./components/Confetti.jsx";
 import Board from "./components/Board.jsx";
-import Tile from "./components/Tile.jsx";
 import "./styles/App.css";
 
 export default function App() {
@@ -79,9 +79,8 @@ export default function App() {
           setBoard={setBoard}
           setHistory={setHistory}
           generateBoard={generateBoard}
-          
         />
-        {hasWinner && <WinningAnimation gif={winnerCat} />}
+        {hasWinner && <WinningAnimation gif={winnerHam} />}
       </div>
     </div>
   );

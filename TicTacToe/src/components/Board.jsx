@@ -1,5 +1,5 @@
-import { useContext,useEffect } from "react";
-import react from "react";
+import { useEffect, useMemo } from "react";
+import React from "react";
 import Tile from "./Tile";
 
 const Board = (props) => {
@@ -8,7 +8,6 @@ const Board = (props) => {
 
   const handleClick = (tileId) => {
 
-  
     const newValue = props.currPlayer();
     const row = Math.floor(tileId / boardSize );
     const col = tileId % boardSize;
@@ -77,7 +76,7 @@ const Board = (props) => {
               key={cell.tileId}
               value={cell.value}
               tileId={cell.tileId}
-              handleClick={() => handleClick(cell.tileId)}
+              handleClick={!props.hasWinner ? () => handleClick(cell.tileId) : null}
             />
           ))}
         </div>
