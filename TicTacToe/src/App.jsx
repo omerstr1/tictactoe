@@ -1,76 +1,48 @@
-import WinningAnimation from "./components/WinningAnimations.jsx";
-import HistoryContainer from "./components/HistoryContainer.jsx";
-import winnerHam from "./assets/dancing-hamster-gif.gif";
-import winnerCat from "./assets/dancing-cat-gif.gif";
-import React, { useEffect, useState } from "react";
-import Confetti from "./components/Confetti.jsx";
-import Board from "./components/Board.jsx";
 import "./styles/App.css";
+import React, { useState,useMemo } from "react";
+import Board from "./components/Board.jsx";
+import Confetti from "./components/Confetti.jsx";
+import HistoryContainer from "./components/HistoryContainer.jsx";
+import WinningAnimation from "./components/WinningAnimations.jsx";
+import threeDancingHamster from "./assets/three-dancing-hamsters-gif.gif";
+import {
+  title,
+  generateBoard,
+  newBoard,
+  currPlayer,
+} from "./utils/BoardUtils.js";
 
-export default function App() {
-  const generateBoard = (boardSize) => {
-    const newBoard = [];
-    for (let row = 0; row < boardSize; row++) {
-      const currRow = [];
-      for (let col = 0; col < boardSize; col++) {
-        currRow.push({ tileId: row * boardSize + col, value: " " });
-      }
-      newBoard.push(currRow);
-    }
-    return newBoard;
-  };
-
-  const [boardSize, setBoardSize] = useState(3);
-  const [board, setBoard] = useState(generateBoard(boardSize));
+const App = () => {
+  
+  const boardSize = 3;
   const [history, setHistory] = useState([]);
   const [hasWinner, setHasWinner] = useState(false);
-
-  const title = () => {
-    if (hasWinner) {
-      return `${history[history.length - 1].value} Won!`;
-    } else if (history.length === 9) {
-      return "It's a tie!";
-    } else {
-      return `${currPlayer()}'s Turn`;
-    }
-  };
-
-  const currPlayer = () => {
-    if (history.length % 2 === 1) {
-      return "O";
-    } else {
-      return "X";
-    }
-  };
-
-  const newBoard = () => {
-    setBoard(generateBoard(3));
-    setHistory([]);
-    setHasWinner(false);
-  };
-
-  const addToHistory = (tileId, value) => {
-    setHistory((oldHistory) => [...oldHistory, { tileId, value }]);
-  };
+  const [board, setBoard] = useState(generateBoard(boardSize));
 
   return (
     <div>
       <div className="body">
         {hasWinner && <Confetti />}
-        {hasWinner && <WinningAnimation gif={winnerCat} />}
+        {hasWinner && <WinningAnimation gif={threeDancingHamster} />}
         <div className="main--section">
-          <h1>{title()}</h1>
+          <h1>{title(history, boardSize, hasWinner)}</h1>
           <Board
             hasWinner={hasWinner}
             board={board}
             setBoard={setBoard}
             setHasWinner={setHasWinner}
-            addToHistory={addToHistory}
             currPlayer={currPlayer}
             boardSize={boardSize}
+            history={history}
+            setHistory={setHistory}
           />
           <br />
-          <button className="reset-btn" onClick={newBoard}>
+          <button
+            className="reset-btn"
+            onClick={() =>
+              newBoard(boardSize, setBoard, setHasWinner, setHistory)
+            }
+          >
             Reset Game
           </button>
         </div>
@@ -79,9 +51,12 @@ export default function App() {
           setBoard={setBoard}
           setHistory={setHistory}
           generateBoard={generateBoard}
+          boardSize={boardSize}
         />
-        {hasWinner && <WinningAnimation gif={winnerHam} />}
+        {hasWinner && <WinningAnimation gif={threeDancingHamster} className="img-hor"/>}
       </div>
     </div>
   );
-}
+};
+
+export default App;

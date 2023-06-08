@@ -7,18 +7,21 @@ const Board = (props) => {
   const boardSize = props.boardSize;
 
   const handleClick = (tileId) => {
-
-    const newValue = props.currPlayer();
-    const row = Math.floor(tileId / boardSize );
+    const newValue = props.currPlayer(props.history);
+    const row = Math.floor(tileId / boardSize);
     const col = tileId % boardSize;
 
     if (board[row][col].value === " ") {
       let newBoard = [...board];
       newBoard[row][col].value = newValue;
       props.setBoard(newBoard);
-      props.addToHistory(tileId, newValue);
+      addToHistory(tileId, newValue);
       props.setHasWinner(checkWinner(board));
     }
+  };
+
+  const addToHistory = (tileId, value) => {
+    props.setHistory((oldHistory) => [...oldHistory, { tileId, value }]);
   };
 
   const checkWinner = (matrix) => {
@@ -65,7 +68,7 @@ const Board = (props) => {
 
   useEffect(() => {
     props.setHasWinner(checkWinner(board));
-  }, props.Board);
+  }, [board, props.setHasWinner]);
 
   return (
     <div className="grid-row-container">
@@ -76,7 +79,9 @@ const Board = (props) => {
               key={cell.tileId}
               value={cell.value}
               tileId={cell.tileId}
-              handleClick={!props.hasWinner ? () => handleClick(cell.tileId) : null}
+              handleClick={
+                !props.hasWinner ? () => handleClick(cell.tileId) : null
+              }
             />
           ))}
         </div>

@@ -2,7 +2,7 @@ import React from 'react';
 
 const WinningAnimation = (props) => {
 return (
-    <div className="WinningGif">
+    <div>
         <img src={props.gif}/>
     </div>
 )

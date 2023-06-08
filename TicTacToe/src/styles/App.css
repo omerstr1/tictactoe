@@ -43,11 +43,11 @@ body {
   position: static;
 }
 
-.confetti{
-  position: 'fixed';
-  pointerEvents: 'none';
-  width: '100%';
-  height: '100%';
+.confetti {
+  position: "fixed";
+  pointerevents: "none";
+  width: "100%";
+  height: "100%";
   top: 0;
   left: 0;
 }
@@ -105,4 +105,7 @@ body {
 .moves-container {
   height: 50vh;
 }
-
+.img-hor {
+  
+  top: 90px;
+}
